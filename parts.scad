@@ -121,7 +121,6 @@ function flatten(l) = [ for (a = l) for (b = a) b ] ;
 
 module draw_part(outline, holes = []) {
 	outline = generate_outline(outline);
-	holes = generate_holes(holes);
 
 	points = concat(outline, flatten(holes));
 	paths = generate_paths(concat([outline], holes));
@@ -160,9 +159,16 @@ module top(w = width, d = depth, material_thickness = material_thickness) {
 		[0 + material_thickness, d / 3, RELIEF_LEAD_IN],
 		[0, d / 3, RELIEF_NONE],
 	];
-	holes = [[50, 30], [10, 10]];
+	holes = [
+		[w - material_thickness / 2, d / 6],
+		[w - material_thickness / 2, 5 * d / 6],
+		[material_thickness / 2, d / 6],
+		[material_thickness / 2, 5 * d / 6],
+		[w - w / 6, d - material_thickness / 2],
+		[0 + w / 6, d - material_thickness / 2],
+	];
 
-	draw_part(outline, holes = holes);
+	draw_part(outline, holes = generate_holes(holes));
 };
 
 top();
