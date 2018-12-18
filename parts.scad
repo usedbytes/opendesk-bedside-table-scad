@@ -41,13 +41,17 @@ module relief(corner = [0, 0], radius = 5) {
 function relief_lead_in_points(corner = [[0, -30], [0, 0], [30, 0]], radius = 5) =
 	let(
 		rot_mat = corner[0][0] == corner[1][0] ? [[1, 0],[0, 1]] : [[0, 1], [1, 0]],
+
 		before = rot_mat * corner[0],
 		at = rot_mat * corner[1],
 		after = rot_mat * corner[2],
+
 		mirror_x = at[0] < after[0] ? 1 : -1,
 		mirror_y = at[1] > before[1] ? 1 : -1,
 		mirror_mat = [ [mirror_x, 0], [0, mirror_y] ],
+
 		canonical_points = relief_points([0, 0], radius = radius),
+
 		points = [ for ( i = [0:len(canonical_points) - 1] )
 			(rot_mat * mirror_mat * canonical_points[i]) + corner[1]
 		]
@@ -68,18 +72,20 @@ module relief_lead_out(corner = [[0, -30], [0, 0], [30, 0]], radius = 5) {
 }
 
 function generate_corner(points, i) = let(relief = points[i][2])
-	relief == RELIEF_NONE ? [ [points[i][0], points[i][1]] ] :
-		relief == RELIEF_LEAD_IN ?
-			relief_lead_in_points([
+	relief == RELIEF_NONE ?
+		[ [points[i][0], points[i][1]] ]
+	: relief == RELIEF_LEAD_IN ?
+		relief_lead_in_points([
 				[ points[i - 1][0], points[i - 1][1] ],
 				[ points[i][0], points[i][1] ],
 				[ points[i + 1][0], points[i + 1][1]]
-			], radius = radius) :
-				relief_lead_out_points([
-					[ points[i - 1][0], points[i - 1][1] ],
-					[ points[i][0], points[i][1] ],
-					[ points[i + 1][0], points[i + 1][1]]
-				], radius = radius);
+			], radius = radius)
+	: // relief == RELIEF_LEAD_OUT
+		relief_lead_out_points([
+				[ points[i - 1][0], points[i - 1][1] ],
+				[ points[i][0], points[i][1] ],
+				[ points[i + 1][0], points[i + 1][1]]
+			], radius = radius);
 
 function generate_outline(points, acc_=[], i = 0) =
 	i == len(points) ? acc_ :
