@@ -49,37 +49,58 @@ module relief_lead_in(corner = [[0, -30], [0, 0], [30, 0]], radius = 5) {
 	polygon(relief_lead_in_points(corner = corner, radius = radius));
 }
 
+RELIEF_NONE = 0;
+RELIEF_LEAD_IN = 1;
+
+function generate_corner(points, i) =
+	points[i][2] == RELIEF_NONE ? [ [points[i][0], points[i][1]] ] :
+		relief_lead_in_points([
+			[ points[i - 1][0], points[i - 1][1] ],
+			[ points[i][0], points[i][1] ],
+			[ points[i + 1][0], points[i + 1][1]]
+		]);
+
+function generate_points(points, acc_=[], i = 0) =
+	i == len(points) ? acc_ :
+		generate_points(points,
+			acc_ = i == 0 ? [[points[0][0], points[0][1]]] : concat(acc_, generate_corner(points, i)),
+			i = i + 1);
+
 module top(w = width, d = depth, material_thickness = material_thickness) {
 	// Anticlockwise
 	outline = [
 		// Bottom
-		[0, 0],
-		[w / 3, 0],
-		[w / 3, material_thickness],
-		[2 * w / 3, material_thickness],
-		[2 * w / 3, 0],
+		[0, 0, RELIEF_NONE],
+		[w / 3, 0, RELIEF_NONE],
+		[w / 3, material_thickness, RELIEF_NONE],
+		[2 * w / 3, material_thickness, RELIEF_LEAD_IN],
+		[2 * w / 3, 0, RELIEF_NONE],
 
 		// Right
-		[w, 0],
-		[w, d / 3],
-		[w - material_thickness, d / 3],
-		[w - material_thickness, 2 * d / 3],
-		[w, 2 * d / 3],
+		[w, 0, RELIEF_NONE],
+		[w, d / 3, RELIEF_NONE],
+		[w - material_thickness, d / 3, RELIEF_NONE],
+		[w - material_thickness, 2 * d / 3, RELIEF_LEAD_IN],
+		[w, 2 * d / 3, RELIEF_NONE],
 
 		// Top
-		[w, d],
-		[2 * w / 3, d],
-		[2 * w / 3, d - material_thickness],
-		[w / 3, d - material_thickness],
-		[w / 3, d],
+		[w, d, RELIEF_NONE],
+		[2 * w / 3, d, RELIEF_NONE],
+		[2 * w / 3, d - material_thickness, RELIEF_NONE],
+		[w / 3, d - material_thickness, RELIEF_LEAD_IN],
+		[w / 3, d, RELIEF_NONE],
 
 		// Left
-		[0, d],
-		[0, 2 * d / 3],
-		[0 + material_thickness, 2 * d / 3],
-		[0 + material_thickness, d / 3],
-		[0, d / 3],
+		[0, d, RELIEF_NONE],
+		[0, 2 * d / 3, RELIEF_NONE],
+		[0 + material_thickness, 2 * d / 3, RELIEF_NONE],
+		[0 + material_thickness, d / 3, RELIEF_LEAD_IN],
+		[0, d / 3, RELIEF_NONE],
 	];
 
-	polygon(points = outline);
-}
+	points = generate_points(outline);
+
+	polygon(points);
+};
+
+top();
