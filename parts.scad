@@ -71,21 +71,31 @@ module relief_lead_out(corner = [[0, -30], [0, 0], [30, 0]], radius = 5) {
 	polygon(relief_lead_out_points(corner = corner, radius = radius));
 }
 
+function corner_points(points, i) = let(last = len(points) - 1)
+	i == 0 ? [
+			[ points[last][0], points[last][1] ],
+			[ points[i][0], points[i][1] ],
+			[ points[i + 1][0], points[i + 1][1] ]
+		]
+	: i == last ? [
+			[ points[i - 1][0], points[i - 1][1] ],
+			[ points[i][0], points[i][1] ],
+			[ points[0][0], points[0][1] ]
+		]
+	: [
+			[ points[i - 1][0], points[i - 1][1] ],
+			[ points[i][0], points[i][1] ],
+			[ points[i + 1][0], points[i + 1][1] ]
+		];
+
+
 function generate_corner(points, i) = let(relief = points[i][2])
 	relief == RELIEF_NONE ?
 		[ [points[i][0], points[i][1]] ]
 	: relief == RELIEF_LEAD_IN ?
-		relief_lead_in_points([
-				[ points[i - 1][0], points[i - 1][1] ],
-				[ points[i][0], points[i][1] ],
-				[ points[i + 1][0], points[i + 1][1]]
-			], radius = radius)
+		relief_lead_in_points(corner_points(points, i), radius = radius)
 	: // relief == RELIEF_LEAD_OUT
-		relief_lead_out_points([
-				[ points[i - 1][0], points[i - 1][1] ],
-				[ points[i][0], points[i][1] ],
-				[ points[i + 1][0], points[i + 1][1]]
-			], radius = radius);
+		relief_lead_out_points(corner_points(points, i), radius = radius);
 
 function generate_outline(points, acc_=[], i = 0) =
 	i == len(points) ? acc_ :
