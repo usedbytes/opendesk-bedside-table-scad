@@ -2,6 +2,11 @@ $fn = 16;
 width = 440;
 depth = 440;
 material_thickness = 18;
+radius = 3.5;
+
+RELIEF_NONE = 0;
+RELIEF_LEAD_IN = 1;
+RELIEF_LEAD_OUT = 2;
 
 function arc_points(centre = [0, 0], start = 0, angle = 180, radius = 5) =
 	let(
@@ -49,16 +54,29 @@ module relief_lead_in(corner = [[0, -30], [0, 0], [30, 0]], radius = 5) {
 	polygon(relief_lead_in_points(corner = corner, radius = radius));
 }
 
-RELIEF_NONE = 0;
-RELIEF_LEAD_IN = 1;
+function reverse (points, i = 0) =
+    len(points) > i ? concat(reverse(points, i + 1), [points[i]]) : [];
 
-function generate_corner(points, i) =
-	points[i][2] == RELIEF_NONE ? [ [points[i][0], points[i][1]] ] :
-		relief_lead_in_points([
-			[ points[i - 1][0], points[i - 1][1] ],
-			[ points[i][0], points[i][1] ],
-			[ points[i + 1][0], points[i + 1][1]]
-		]);
+function relief_lead_out_points(corner = [[0, -30], [0, 0], [30, 0]], radius = 5) =
+	reverse(relief_lead_in_points(corner = reverse(corner), radius = radius));
+
+module relief_lead_out(corner = [[0, -30], [0, 0], [30, 0]], radius = 5) {
+	polygon(relief_lead_out_points(corner = corner, radius = radius));
+}
+
+function generate_corner(points, i) = let(relief = points[i][2])
+	relief == RELIEF_NONE ? [ [points[i][0], points[i][1]] ] :
+		relief == RELIEF_LEAD_IN ?
+			relief_lead_in_points([
+				[ points[i - 1][0], points[i - 1][1] ],
+				[ points[i][0], points[i][1] ],
+				[ points[i + 1][0], points[i + 1][1]]
+			], radius = radius) :
+				relief_lead_out_points([
+					[ points[i - 1][0], points[i - 1][1] ],
+					[ points[i][0], points[i][1] ],
+					[ points[i + 1][0], points[i + 1][1]]
+				], radius = radius);
 
 function generate_points(points, acc_=[], i = 0) =
 	i == len(points) ? acc_ :
@@ -72,28 +90,28 @@ module top(w = width, d = depth, material_thickness = material_thickness) {
 		// Bottom
 		[0, 0, RELIEF_NONE],
 		[w / 3, 0, RELIEF_NONE],
-		[w / 3, material_thickness, RELIEF_NONE],
+		[w / 3, material_thickness, RELIEF_LEAD_OUT],
 		[2 * w / 3, material_thickness, RELIEF_LEAD_IN],
 		[2 * w / 3, 0, RELIEF_NONE],
 
 		// Right
 		[w, 0, RELIEF_NONE],
 		[w, d / 3, RELIEF_NONE],
-		[w - material_thickness, d / 3, RELIEF_NONE],
+		[w - material_thickness, d / 3, RELIEF_LEAD_OUT],
 		[w - material_thickness, 2 * d / 3, RELIEF_LEAD_IN],
 		[w, 2 * d / 3, RELIEF_NONE],
 
 		// Top
 		[w, d, RELIEF_NONE],
 		[2 * w / 3, d, RELIEF_NONE],
-		[2 * w / 3, d - material_thickness, RELIEF_NONE],
+		[2 * w / 3, d - material_thickness, RELIEF_LEAD_OUT],
 		[w / 3, d - material_thickness, RELIEF_LEAD_IN],
 		[w / 3, d, RELIEF_NONE],
 
 		// Left
 		[0, d, RELIEF_NONE],
 		[0, 2 * d / 3, RELIEF_NONE],
-		[0 + material_thickness, 2 * d / 3, RELIEF_NONE],
+		[0 + material_thickness, 2 * d / 3, RELIEF_LEAD_OUT],
 		[0 + material_thickness, d / 3, RELIEF_LEAD_IN],
 		[0, d / 3, RELIEF_NONE],
 	];
