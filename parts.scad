@@ -4,13 +4,14 @@ depth = 440;
 tongue_w = 302;
 material_thickness = 18;
 radius = 3.5;
+drill_radius = 2;
 
 RELIEF_NONE = 0;
 RELIEF_LEAD_IN = 1;
 RELIEF_LEAD_OUT = 2;
 
 function circle_points(centre = [0, 0], radius = 5) =
-	arc_points(centre = centre, start = 0, angle = 360, radius = 5);
+	arc_points(centre = centre, start = 0, angle = 360, radius = radius);
 
 function arc_points(centre = [0, 0], start = 0, angle = 180, radius = 5) =
 	let(
@@ -103,8 +104,8 @@ function generate_outline(points, acc_=[], i = 0) =
 		generate_outline(points,
 			acc_ = concat(acc_, generate_corner(points, i)), i = i + 1);
 
-function generate_holes(holes) =
-	[ for (hole = holes) circle_points(centre = hole) ];
+function generate_drills(holes, radius = drill_radius) =
+	[ for (hole = holes) circle_points(centre = hole, radius = drill_radius) ];
 
 function generate_path(points, start = 0) = [for (i = [start : start + len(points) - 1]) i ];
 
@@ -169,7 +170,7 @@ module top(w = width, d = depth, material_thickness = material_thickness) {
 		[0 + w / 6, d - material_thickness / 2],
 	];
 
-	draw_part(outline, holes = generate_holes(holes));
+	draw_part(outline, holes = generate_drills(holes));
 };
 
 module shelf(w = width, d = depth, material_thickness = material_thickness) {
