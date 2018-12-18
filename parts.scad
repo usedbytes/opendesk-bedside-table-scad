@@ -8,6 +8,9 @@ RELIEF_NONE = 0;
 RELIEF_LEAD_IN = 1;
 RELIEF_LEAD_OUT = 2;
 
+function circle_points(centre = [0, 0], radius = 5) =
+	arc_points(centre = centre, start = 0, angle = 360, radius = 5);
+
 function arc_points(centre = [0, 0], start = 0, angle = 180, radius = 5) =
 	let(
 		points = [
@@ -78,11 +81,37 @@ function generate_corner(points, i) = let(relief = points[i][2])
 					[ points[i + 1][0], points[i + 1][1]]
 				], radius = radius);
 
-function generate_points(points, acc_=[], i = 0) =
+function generate_outline(points, acc_=[], i = 0) =
 	i == len(points) ? acc_ :
-		generate_points(points,
-			acc_ = i == 0 ? [[points[0][0], points[0][1]]] : concat(acc_, generate_corner(points, i)),
-			i = i + 1);
+		generate_outline(points,
+			acc_ = concat(acc_, generate_corner(points, i)), i = i + 1);
+
+function generate_holes(holes) =
+	[ for (hole = holes) circle_points(centre = hole) ];
+
+function generate_path(points, start = 0) = [for (i = [start : start + len(points) - 1]) i ];
+
+function generate_paths(paths, acc_ = [], start = 0) = let(i = len(acc_))
+	i == len(paths) ? acc_ :
+		generate_paths(
+			paths = paths,
+			acc_ = concat(acc_, [generate_path(paths[i], start = start)]),
+			start = start + len(paths[i]));
+
+// From the wiki - https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/List_Comprehensions
+// input : nested list
+// output : list with the outer level nesting removed
+function flatten(l) = [ for (a = l) for (b = a) b ] ;
+
+module draw_part(outline, holes = []) {
+	outline = generate_outline(outline);
+	holes = generate_holes(holes);
+
+	points = concat(outline, flatten(holes));
+	paths = generate_paths(concat([outline], holes));
+
+	polygon(points = points, paths = paths);
+}
 
 module top(w = width, d = depth, material_thickness = material_thickness) {
 	// Anticlockwise
@@ -115,10 +144,9 @@ module top(w = width, d = depth, material_thickness = material_thickness) {
 		[0 + material_thickness, d / 3, RELIEF_LEAD_IN],
 		[0, d / 3, RELIEF_NONE],
 	];
+	holes = [[50, 30], [10, 10]];
 
-	points = generate_points(outline);
-
-	polygon(points);
+	draw_part(outline, holes = holes);
 };
 
 top();
