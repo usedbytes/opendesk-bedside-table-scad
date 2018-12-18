@@ -1,6 +1,7 @@
 $fn = 16;
 width = 440;
 depth = 440;
+tongue_w = 302;
 material_thickness = 18;
 radius = 3.5;
 
@@ -171,4 +172,38 @@ module top(w = width, d = depth, material_thickness = material_thickness) {
 	draw_part(outline, holes = generate_holes(holes));
 };
 
+module shelf(w = width, d = depth, material_thickness = material_thickness) {
+	x = (w - tongue_w) / 2;
+	y = (d - tongue_w) / 2;
+
+	outline = [
+		[material_thickness, material_thickness, RELIEF_NONE],
+		[x, material_thickness, RELIEF_LEAD_IN],
+		[x, 0, RELIEF_NONE],
+		[w - x, 0, RELIEF_NONE],
+		[w - x, material_thickness, RELIEF_LEAD_OUT],
+
+		[w - material_thickness, material_thickness, RELIEF_NONE],
+		[w - material_thickness, y, RELIEF_LEAD_IN],
+		[w, y, RELIEF_NONE],
+		[w, d - y, RELIEF_NONE],
+		[w - material_thickness, d - y, RELIEF_LEAD_OUT],
+
+		[w - material_thickness, d - material_thickness, RELIEF_NONE],
+		[w - x, d - material_thickness, RELIEF_LEAD_IN],
+		[w - x, d, RELIEF_NONE],
+		[x, d, RELIEF_NONE],
+		[x, d - material_thickness, RELIEF_LEAD_OUT],
+
+		[material_thickness, d - material_thickness, RELIEF_NONE],
+		[material_thickness, d - y, RELIEF_LEAD_IN],
+		[0, d - y, RELIEF_NONE],
+		[0, y, RELIEF_NONE],
+		[material_thickness, y, RELIEF_LEAD_OUT],
+	];
+
+	draw_part(outline);
+}
+
 top();
+translate([0, depth + 40, 0]) shelf();
