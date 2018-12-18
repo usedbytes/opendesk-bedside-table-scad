@@ -135,10 +135,6 @@ module top(w = width, d = depth, material_thickness = material_thickness) {
 	outline = [
 		// Bottom
 		[0, 0, RELIEF_NONE],
-		[w / 3, 0, RELIEF_NONE],
-		[w / 3, material_thickness, RELIEF_LEAD_OUT],
-		[2 * w / 3, material_thickness, RELIEF_LEAD_IN],
-		[2 * w / 3, 0, RELIEF_NONE],
 
 		// Right
 		[w, 0, RELIEF_NONE],
