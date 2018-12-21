@@ -252,7 +252,16 @@ module side(w = width, d = depth, h = height, material_thickness = material_thic
 		[0, shelf_h / 2, RELIEF_NONE],
 	];
 
-	draw_part(outline);
+	holes = [
+		[material_thickness / 2, shelf_h / 4],
+		[x / 2, shelf_h - material_thickness / 2],
+		[material_thickness / 2, h - (h - shelf_h) / 4],
+		[w / 2, h - material_thickness / 2],
+		[w - x / 2, shelf_h - material_thickness / 2],
+		[w - material_thickness / 2, h / 2],
+	];
+
+	draw_part(outline, holes = generate_drills(holes));
 }
 
 module left_side(w = width, d = depth, h = height, material_thickness = material_thickness) {
@@ -309,10 +318,18 @@ module back(w = width, d = depth, h = height, material_thickness = material_thic
 		[0, shelf_h / 2, RELIEF_NONE],
 		[material_thickness, shelf_h / 2, RELIEF_LEAD_OUT],
 		[material_thickness, 0, RELIEF_NONE],
-
 	];
 
-	draw_part(outline);
+	tongue_top = h - (h - shelf_h) / 2;
+	holes = [
+		[w - material_thickness / 2, (shelf_h / 2) + (tongue_top - shelf_h / 2) / 2],
+		[w - x  / 2, shelf_h - material_thickness / 2],
+		[w / 2, h - material_thickness / 2],
+		[x  / 2, shelf_h - material_thickness / 2],
+		[material_thickness / 2, (shelf_h / 2) + (tongue_top - shelf_h / 2) / 2],
+	];
+
+	draw_part(outline, holes = generate_drills(holes));
 }
 
 module front(w = width, d = depth, h = height, material_thickness = material_thickness) {
@@ -331,7 +348,12 @@ module front(w = width, d = depth, h = height, material_thickness = material_thi
 		[0, shelf_h / 2, RELIEF_NONE],
 	];
 
-	draw_part(outline);
+	holes = [
+		[material_thickness + (x - material_thickness) / 2, shelf_h - material_thickness / 2],
+		[material_thickness / 2, shelf_h / 4],
+	];
+
+	draw_part(outline, holes = generate_drills(holes));
 
 }
 
@@ -356,5 +378,10 @@ module foot(material_thickness = material_thickness) {
 		[2 * material_thickness, material_thickness, RELIEF_LEAD_IN],
 	];
 
-	draw_part(outline);
+	holes = [
+		[3.5 * material_thickness, material_thickness / 2],
+		[material_thickness / 2, 3.5 * material_thickness],
+	];
+
+	draw_part(outline, holes = generate_drills(holes));
 }
