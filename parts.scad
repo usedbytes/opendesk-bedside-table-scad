@@ -163,7 +163,7 @@ module top(w = width, d = depth, material_thickness = material_thickness) {
 
 module shelf(w = width, d = depth, material_thickness = material_thickness) {
 	x = (w - tongue_w) / 2;
-	y = (d - tongue_w) / 2;
+	y = (d - (d / w) * tongue_w) / 2;
 
 	outline = [
 		[material_thickness, material_thickness, RELIEF_NONE],
@@ -195,7 +195,7 @@ module shelf(w = width, d = depth, material_thickness = material_thickness) {
 }
 
 module side(w = width, d = depth, h = height, material_thickness = material_thickness) {
-	x = (w - tongue_w) / 2;
+	x = (d - (d / w) * tongue_w) / 2;
 
 	outline = [
 		// Rear foot
@@ -205,33 +205,33 @@ module side(w = width, d = depth, h = height, material_thickness = material_thic
 
 		// Rear slope
 		[4 * material_thickness, material_thickness, RELIEF_NONE],
-		[4 * material_thickness + (w / 10), shelf_h - material_thickness, RELIEF_NONE],
+		[4 * material_thickness + (d / 10), shelf_h - material_thickness, RELIEF_NONE],
 
 		// Shelf cutout
 		[x, shelf_h - material_thickness, RELIEF_LEAD_IN],
 		[x, shelf_h, RELIEF_LEAD_OUT],
-		[w - x, shelf_h, RELIEF_LEAD_IN],
-		[w - x, shelf_h - material_thickness, RELIEF_LEAD_OUT],
+		[d - x, shelf_h, RELIEF_LEAD_IN],
+		[d - x, shelf_h - material_thickness, RELIEF_LEAD_OUT],
 
 		// Front slope
-		[w - (4 * material_thickness + (w / 10)), shelf_h - material_thickness, RELIEF_NONE],
-		[w - 4 * material_thickness, material_thickness, RELIEF_NONE],
+		[d - (4 * material_thickness + (d / 10)), shelf_h - material_thickness, RELIEF_NONE],
+		[d - 4 * material_thickness, material_thickness, RELIEF_NONE],
 
 		// Front foot
-		[w - 2 * material_thickness, material_thickness, RELIEF_LEAD_IN],
-		[w - 2 * material_thickness, 0, RELIEF_NONE],
+		[d - 2 * material_thickness, material_thickness, RELIEF_LEAD_IN],
+		[d - 2 * material_thickness, 0, RELIEF_NONE],
 
 		// Front Side
-		[w - material_thickness, 0, RELIEF_NONE],
-		[w - material_thickness, shelf_h / 2, RELIEF_LEAD_IN],
-		[w, shelf_h / 2, RELIEF_NONE],
+		[d - material_thickness, 0, RELIEF_NONE],
+		[d - material_thickness, shelf_h / 2, RELIEF_LEAD_IN],
+		[d, shelf_h / 2, RELIEF_NONE],
 
 		// Top
-		[w, h - material_thickness, RELIEF_NONE],
-		[2 * w / 3, h - material_thickness, RELIEF_LEAD_IN],
-		[2 * w / 3, h, RELIEF_NONE],
-		[w / 3, h, RELIEF_NONE],
-		[w / 3, h - material_thickness, RELIEF_LEAD_OUT],
+		[d, h - material_thickness, RELIEF_NONE],
+		[2 * d / 3, h - material_thickness, RELIEF_LEAD_IN],
+		[2 * d / 3, h, RELIEF_NONE],
+		[d / 3, h, RELIEF_NONE],
+		[d / 3, h - material_thickness, RELIEF_LEAD_OUT],
 
 		// Back
 		[0, h - material_thickness, RELIEF_NONE],
@@ -246,9 +246,9 @@ module side(w = width, d = depth, h = height, material_thickness = material_thic
 		[material_thickness / 2, shelf_h / 4],
 		[x / 2, shelf_h - material_thickness / 2],
 		[material_thickness / 2, h - (h - shelf_h) / 4],
-		[w / 2, h - material_thickness / 2],
-		[w - x / 2, shelf_h - material_thickness / 2],
-		[w - material_thickness / 2, h / 2 - 1.5 * material_thickness],
+		[d / 2, h - material_thickness / 2],
+		[d - x / 2, shelf_h - material_thickness / 2],
+		[d - material_thickness / 2, h / 2 - 1.5 * material_thickness],
 	];
 
 	draw_part(outline, holes = generate_drills(holes));

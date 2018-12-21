@@ -1,14 +1,13 @@
 $fn = 16;
 
-scale_f = 3/ 18;
-width = 440 * scale_f;
-depth = 440 * scale_f;
-height = 400 * scale_f;
-tongue_w = 302 * scale_f;
-material_thickness = 3;
-shelf_h = 222 * scale_f;
-radius = 3.5 * scale_f;
-drill_radius = 2 * scale_f;
+width = 400;
+depth = 480;
+height = 560;
+tongue_w = width * 2 / 3;
+material_thickness = 18;
+shelf_h = height * 2 / 3;
+radius = 3.5;
+drill_radius = 2;
 
 include <parts.scad>
 
