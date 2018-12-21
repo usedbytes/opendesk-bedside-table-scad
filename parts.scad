@@ -248,7 +248,7 @@ module side(w = width, d = depth, h = height, material_thickness = material_thic
 		[material_thickness / 2, h - (h - shelf_h) / 4],
 		[w / 2, h - material_thickness / 2],
 		[w - x / 2, shelf_h - material_thickness / 2],
-		[w - material_thickness / 2, h / 2],
+		[w - material_thickness / 2, h / 2 - 1.5 * material_thickness],
 	];
 
 	draw_part(outline, holes = generate_drills(holes));
@@ -312,11 +312,11 @@ module back(w = width, d = depth, h = height, material_thickness = material_thic
 
 	tongue_top = h - (h - shelf_h) / 2;
 	holes = [
-		[w - material_thickness / 2, (shelf_h / 2) + (tongue_top - shelf_h / 2) / 2],
+		[w - material_thickness / 2, h / 2 - 1.5 * material_thickness],
 		[w - x  / 2, shelf_h - material_thickness / 2],
 		[w / 2, h - material_thickness / 2],
 		[x  / 2, shelf_h - material_thickness / 2],
-		[material_thickness / 2, (shelf_h / 2) + (tongue_top - shelf_h / 2) / 2],
+		[material_thickness / 2, h / 2 - 1.5 * material_thickness],
 	];
 
 	draw_part(outline, holes = generate_drills(holes));
