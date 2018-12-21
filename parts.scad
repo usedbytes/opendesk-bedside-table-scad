@@ -1,8 +1,10 @@
 $fn = 16;
 width = 440;
 depth = 440;
+height = 400;
 tongue_w = 302;
 material_thickness = 18;
+shelf_h = 222;
 radius = 3.5;
 drill_radius = 2;
 
@@ -202,5 +204,61 @@ module shelf(w = width, d = depth, material_thickness = material_thickness) {
 	draw_part(outline);
 }
 
-top();
-translate([0, depth + 40, 0]) shelf();
+module side(w = width, d = depth, h = height, material_thickness = material_thickness) {
+	x = (w - tongue_w) / 2;
+
+	outline = [
+		// Rear foot
+		[0, 0, RELIEF_NONE],
+		[2 * material_thickness, 0, RELIEF_NONE],
+		[2 * material_thickness, material_thickness, RELIEF_LEAD_OUT],
+
+		// Rear slope
+		[4 * material_thickness, material_thickness, RELIEF_NONE],
+		[4 * material_thickness + (w / 10), shelf_h - material_thickness, RELIEF_NONE],
+
+		// Shelf cutout
+		[x, shelf_h - material_thickness, RELIEF_LEAD_IN],
+		[x, shelf_h, RELIEF_LEAD_OUT],
+		[w - x, shelf_h, RELIEF_LEAD_IN],
+		[w - x, shelf_h - material_thickness, RELIEF_LEAD_OUT],
+
+		// Front slope
+		[w - (4 * material_thickness + (w / 10)), shelf_h - material_thickness, RELIEF_NONE],
+		[w - 4 * material_thickness, material_thickness, RELIEF_NONE],
+
+		// Front foot
+		[w - 2 * material_thickness, material_thickness, RELIEF_LEAD_IN],
+		[w - 2 * material_thickness, 0, RELIEF_NONE],
+
+		// Front Side
+		[w - material_thickness, 0, RELIEF_NONE],
+		[w - material_thickness, shelf_h / 2, RELIEF_LEAD_IN],
+		[w, shelf_h / 2, RELIEF_NONE],
+
+		// Top
+		[w, h - material_thickness, RELIEF_NONE],
+		[2 * w / 3, h - material_thickness, RELIEF_LEAD_IN],
+		[2 * w / 3, h, RELIEF_NONE],
+		[w / 3, h, RELIEF_NONE],
+		[w / 3, h - material_thickness, RELIEF_LEAD_OUT],
+
+		// Back
+		[0, h - material_thickness, RELIEF_NONE],
+		[0, h - (h - shelf_h) / 2, RELIEF_NONE],
+		[material_thickness, h - (h - shelf_h) / 2, RELIEF_LEAD_OUT],
+
+		[material_thickness, shelf_h / 2, RELIEF_LEAD_IN],
+		[0, shelf_h / 2, RELIEF_NONE],
+	];
+
+	draw_part(outline);
+}
+
+module left_side(w = width, d = depth, h = height, material_thickness = material_thickness) {
+	side(w = w, d = d, h = h, material_thickness = material_thickness);
+}
+
+module right_side(w = width, d = depth, h = height, material_thickness = material_thickness) {
+	translate([w, 0, 0]) mirror([1, 0, 0]) side(w = w, d = d, h = h, material_thickness = material_thickness);
+}
