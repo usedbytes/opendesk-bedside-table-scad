@@ -1,13 +1,3 @@
-$fn = 16;
-width = 440;
-depth = 440;
-height = 400;
-tongue_w = 302;
-material_thickness = 18;
-shelf_h = 222;
-radius = 3.5;
-drill_radius = 2;
-
 RELIEF_NONE = 0;
 RELIEF_LEAD_IN = 1;
 RELIEF_LEAD_OUT = 2;
@@ -269,7 +259,7 @@ module left_side(w = width, d = depth, h = height, material_thickness = material
 }
 
 module right_side(w = width, d = depth, h = height, material_thickness = material_thickness) {
-	translate([w, 0, 0]) mirror([1, 0, 0]) side(w = w, d = d, h = h, material_thickness = material_thickness);
+	translate([0, 0, 0]) mirror([1, 0, 0]) side(w = w, d = d, h = h, material_thickness = material_thickness);
 }
 
 module back(w = width, d = depth, h = height, material_thickness = material_thickness) {
@@ -362,7 +352,7 @@ module front_left(w = width, d = depth, h = height, material_thickness = materia
 }
 
 module front_right(w = width, d = depth, h = height, material_thickness = material_thickness) {
-	translate([4 * material_thickness + (w / 10), 0, 0]) mirror([1, 0, 0]) front(w = w, d = d, h = h, material_thickness = material_thickness);
+	mirror([1, 0, 0]) front(w = w, d = d, h = h, material_thickness = material_thickness);
 }
 
 module foot(material_thickness = material_thickness) {
