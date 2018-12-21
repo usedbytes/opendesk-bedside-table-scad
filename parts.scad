@@ -262,3 +262,99 @@ module left_side(w = width, d = depth, h = height, material_thickness = material
 module right_side(w = width, d = depth, h = height, material_thickness = material_thickness) {
 	translate([w, 0, 0]) mirror([1, 0, 0]) side(w = w, d = d, h = h, material_thickness = material_thickness);
 }
+
+module back(w = width, d = depth, h = height, material_thickness = material_thickness) {
+	x = (w - tongue_w) / 2;
+
+	outline = [
+		// Foot
+		[material_thickness, 0, RELIEF_NONE],
+		[2 * material_thickness, 0, RELIEF_NONE],
+		[2 * material_thickness, material_thickness, RELIEF_LEAD_OUT],
+
+		// Slope
+		[4 * material_thickness, material_thickness, RELIEF_NONE],
+		[4 * material_thickness + (w / 10), shelf_h - material_thickness, RELIEF_NONE],
+
+		// Shelf
+		[x, shelf_h - material_thickness, RELIEF_LEAD_IN],
+		[x, shelf_h, RELIEF_LEAD_OUT],
+		[w - x, shelf_h, RELIEF_LEAD_IN],
+		[w - x, shelf_h - material_thickness, RELIEF_LEAD_OUT],
+
+		// Slope
+		[w - (4 * material_thickness + (w / 10)), shelf_h - material_thickness, RELIEF_NONE],
+		[w - 4 * material_thickness, material_thickness, RELIEF_NONE],
+		[w - 2 * material_thickness, material_thickness, RELIEF_LEAD_IN],
+		[w - 2 * material_thickness, 0, RELIEF_NONE],
+
+		// Side
+		[w - material_thickness, 0, RELIEF_NONE],
+		[w - material_thickness, shelf_h / 2, RELIEF_LEAD_IN],
+		[w, shelf_h / 2, RELIEF_NONE],
+		[w, h - (h - shelf_h) / 2, RELIEF_NONE],
+		[w - material_thickness, h - (h - shelf_h) / 2, RELIEF_LEAD_OUT],
+
+		// Top
+		[w - material_thickness, h - material_thickness, RELIEF_NONE],
+		[2 * w / 3, h - material_thickness, RELIEF_LEAD_IN],
+		[2 * w / 3, h, RELIEF_NONE],
+		[w / 3, h, RELIEF_NONE],
+		[w / 3, h - material_thickness, RELIEF_LEAD_OUT],
+
+		// Side
+		[material_thickness, h - material_thickness, RELIEF_NONE],
+		[material_thickness, h - (h - shelf_h) / 2, RELIEF_LEAD_IN],
+		[0, h - (h - shelf_h) / 2, RELIEF_NONE],
+		[0, shelf_h / 2, RELIEF_NONE],
+		[material_thickness, shelf_h / 2, RELIEF_LEAD_OUT],
+		[material_thickness, 0, RELIEF_NONE],
+
+	];
+
+	draw_part(outline);
+}
+
+module front(w = width, d = depth, h = height, material_thickness = material_thickness) {
+	x = (w - tongue_w) / 2;
+
+	outline = [
+		[0, 0, RELIEF_NONE],
+		[2 * material_thickness, 0, RELIEF_NONE],
+		[2 * material_thickness, material_thickness, RELIEF_LEAD_OUT],
+		[4 * material_thickness, material_thickness, RELIEF_NONE],
+		[4 * material_thickness + (w / 10), shelf_h - material_thickness, RELIEF_NONE],
+		[x, shelf_h - material_thickness, RELIEF_LEAD_IN],
+		[x, shelf_h, RELIEF_NONE],
+		[material_thickness, shelf_h, RELIEF_NONE],
+		[material_thickness, shelf_h / 2, RELIEF_LEAD_IN],
+		[0, shelf_h / 2, RELIEF_NONE],
+	];
+
+	draw_part(outline);
+
+}
+
+module front_left(w = width, d = depth, h = height, material_thickness = material_thickness) {
+	front(w = w, d = d, h = h, material_thickness = material_thickness);
+}
+
+module front_right(w = width, d = depth, h = height, material_thickness = material_thickness) {
+	translate([4 * material_thickness + (w / 10), 0, 0]) mirror([1, 0, 0]) front(w = w, d = d, h = h, material_thickness = material_thickness);
+}
+
+module foot(material_thickness = material_thickness) {
+	outline = [
+		[2 * material_thickness, 0, RELIEF_NONE],
+		[4 * material_thickness, 0, RELIEF_NONE],
+		[4 * material_thickness, material_thickness, RELIEF_NONE],
+		[material_thickness, 4 * material_thickness, RELIEF_NONE],
+		[0, 4 * material_thickness, RELIEF_NONE],
+		[0, 2 * material_thickness, RELIEF_NONE],
+		[material_thickness, 2 * material_thickness, RELIEF_LEAD_OUT],
+		[material_thickness, material_thickness, RELIEF_NONE],
+		[2 * material_thickness, material_thickness, RELIEF_LEAD_IN],
+	];
+
+	draw_part(outline);
+}
