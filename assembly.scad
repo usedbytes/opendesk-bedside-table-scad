@@ -8,6 +8,7 @@ material_thickness = 18;
 shelf_h = height * 2 / 3;
 radius = 3.5;
 drill_radius = 2;
+slop = 2.0;
 
 include <parts.scad>
 

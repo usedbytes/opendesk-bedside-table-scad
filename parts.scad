@@ -130,24 +130,24 @@ module top(w = width, d = depth, material_thickness = material_thickness) {
 
 		// Right
 		[w, 0, RELIEF_NONE],
-		[w, d / 3, RELIEF_NONE],
-		[w - material_thickness, d / 3, RELIEF_LEAD_OUT],
-		[w - material_thickness, 2 * d / 3, RELIEF_LEAD_IN],
-		[w, 2 * d / 3, RELIEF_NONE],
+		[w, d / 3 - slop, RELIEF_NONE],
+		[w - material_thickness - slop, d / 3 - slop, RELIEF_LEAD_OUT],
+		[w - material_thickness - slop, 2 * d / 3 - slop, RELIEF_LEAD_IN],
+		[w, 2 * d / 3 + slop, RELIEF_NONE],
 
 		// Top
 		[w, d, RELIEF_NONE],
-		[2 * w / 3, d, RELIEF_NONE],
-		[2 * w / 3, d - material_thickness, RELIEF_LEAD_OUT],
-		[w / 3, d - material_thickness, RELIEF_LEAD_IN],
-		[w / 3, d, RELIEF_NONE],
+		[2 * w / 3 + slop, d, RELIEF_NONE],
+		[2 * w / 3 + slop, d - material_thickness - slop, RELIEF_LEAD_OUT],
+		[w / 3 - slop, d - material_thickness - slop, RELIEF_LEAD_IN],
+		[w / 3 - slop, d, RELIEF_NONE],
 
 		// Left
 		[0, d, RELIEF_NONE],
-		[0, 2 * d / 3, RELIEF_NONE],
-		[0 + material_thickness, 2 * d / 3, RELIEF_LEAD_OUT],
-		[0 + material_thickness, d / 3, RELIEF_LEAD_IN],
-		[0, d / 3, RELIEF_NONE],
+		[0, 2 * d / 3 + slop, RELIEF_NONE],
+		[0 + material_thickness + slop, 2 * d / 3 + slop, RELIEF_LEAD_OUT],
+		[0 + material_thickness + slop, d / 3 - slop, RELIEF_LEAD_IN],
+		[0, d / 3 - slop, RELIEF_NONE],
 	];
 	holes = [
 		[w - material_thickness / 2, d / 6],
@@ -166,29 +166,29 @@ module shelf(w = width, d = depth, material_thickness = material_thickness) {
 	y = (d - (d / w) * tongue_w) / 2;
 
 	outline = [
-		[material_thickness, material_thickness, RELIEF_NONE],
-		[x, material_thickness, RELIEF_LEAD_IN],
+		[material_thickness + slop, material_thickness + slop, RELIEF_NONE],
+		[x, material_thickness + slop, RELIEF_LEAD_IN],
 		[x, 0, RELIEF_NONE],
 		[w - x, 0, RELIEF_NONE],
-		[w - x, material_thickness, RELIEF_LEAD_OUT],
+		[w - x, material_thickness + slop, RELIEF_LEAD_OUT],
 
-		[w - material_thickness, material_thickness, RELIEF_NONE],
-		[w - material_thickness, y, RELIEF_LEAD_IN],
+		[w - material_thickness - slop, material_thickness + slop, RELIEF_NONE],
+		[w - material_thickness - slop, y, RELIEF_LEAD_IN],
 		[w, y, RELIEF_NONE],
 		[w, d - y, RELIEF_NONE],
-		[w - material_thickness, d - y, RELIEF_LEAD_OUT],
+		[w - material_thickness - slop, d - y, RELIEF_LEAD_OUT],
 
-		[w - material_thickness, d - material_thickness, RELIEF_NONE],
-		[w - x, d - material_thickness, RELIEF_LEAD_IN],
+		[w - material_thickness - slop, d - material_thickness - slop, RELIEF_NONE],
+		[w - x, d - material_thickness - slop, RELIEF_LEAD_IN],
 		[w - x, d, RELIEF_NONE],
 		[x, d, RELIEF_NONE],
-		[x, d - material_thickness, RELIEF_LEAD_OUT],
+		[x, d - material_thickness - slop, RELIEF_LEAD_OUT],
 
-		[material_thickness, d - material_thickness, RELIEF_NONE],
-		[material_thickness, d - y, RELIEF_LEAD_IN],
+		[material_thickness + slop, d - material_thickness - slop, RELIEF_NONE],
+		[material_thickness + slop, d - y, RELIEF_LEAD_IN],
 		[0, d - y, RELIEF_NONE],
 		[0, y, RELIEF_NONE],
-		[material_thickness, y, RELIEF_LEAD_OUT],
+		[material_thickness + slop, y, RELIEF_LEAD_OUT],
 	];
 
 	draw_part(outline);
@@ -200,31 +200,31 @@ module side(w = width, d = depth, h = height, material_thickness = material_thic
 	outline = [
 		// Rear foot
 		[0, 0, RELIEF_NONE],
-		[2 * material_thickness, 0, RELIEF_NONE],
-		[2 * material_thickness, material_thickness, RELIEF_LEAD_OUT],
+		[2 * material_thickness - slop, 0, RELIEF_NONE],
+		[2 * material_thickness - slop, material_thickness, RELIEF_LEAD_OUT],
 
 		// Rear slope
 		[4 * material_thickness, material_thickness, RELIEF_NONE],
-		[4 * material_thickness + (d / 10), shelf_h - material_thickness, RELIEF_NONE],
+		[4 * material_thickness + (d / 10), shelf_h - material_thickness - slop, RELIEF_NONE],
 
 		// Shelf cutout
-		[x, shelf_h - material_thickness, RELIEF_LEAD_IN],
-		[x, shelf_h, RELIEF_LEAD_OUT],
-		[d - x, shelf_h, RELIEF_LEAD_IN],
-		[d - x, shelf_h - material_thickness, RELIEF_LEAD_OUT],
+		[x - slop, shelf_h - material_thickness - slop, RELIEF_LEAD_IN],
+		[x - slop, shelf_h, RELIEF_LEAD_OUT],
+		[d - x + slop, shelf_h, RELIEF_LEAD_IN],
+		[d - x + slop, shelf_h - material_thickness - slop, RELIEF_LEAD_OUT],
 
 		// Front slope
-		[d - (4 * material_thickness + (d / 10)), shelf_h - material_thickness, RELIEF_NONE],
+		[d - (4 * material_thickness + (d / 10)), shelf_h - material_thickness - slop, RELIEF_NONE],
 		[d - 4 * material_thickness, material_thickness, RELIEF_NONE],
 
 		// Front foot
-		[d - 2 * material_thickness, material_thickness, RELIEF_LEAD_IN],
-		[d - 2 * material_thickness, 0, RELIEF_NONE],
+		[d - 2 * material_thickness + slop, material_thickness, RELIEF_LEAD_IN],
+		[d - 2 * material_thickness + slop, 0, RELIEF_NONE],
 
 		// Front Side
-		[d - material_thickness, 0, RELIEF_NONE],
-		[d - material_thickness, shelf_h / 2, RELIEF_LEAD_IN],
-		[d, shelf_h / 2, RELIEF_NONE],
+		[d - material_thickness - slop, 0, RELIEF_NONE],
+		[d - material_thickness - slop, shelf_h / 2 + slop, RELIEF_LEAD_IN],
+		[d, shelf_h / 2 + slop, RELIEF_NONE],
 
 		// Top
 		[d, h - material_thickness, RELIEF_NONE],
@@ -235,11 +235,11 @@ module side(w = width, d = depth, h = height, material_thickness = material_thic
 
 		// Back
 		[0, h - material_thickness, RELIEF_NONE],
-		[0, h - (h - shelf_h) / 2, RELIEF_NONE],
-		[material_thickness, h - (h - shelf_h) / 2, RELIEF_LEAD_OUT],
+		[0, h - (h - shelf_h) / 2 + slop, RELIEF_NONE],
+		[material_thickness + slop, h - (h - shelf_h) / 2 + slop, RELIEF_LEAD_OUT],
 
-		[material_thickness, shelf_h / 2, RELIEF_LEAD_IN],
-		[0, shelf_h / 2, RELIEF_NONE],
+		[material_thickness + slop, shelf_h / 2 - slop, RELIEF_LEAD_IN],
+		[0, shelf_h / 2 - slop, RELIEF_NONE],
 	];
 
 	holes = [
@@ -267,47 +267,47 @@ module back(w = width, d = depth, h = height, material_thickness = material_thic
 
 	outline = [
 		// Foot
-		[material_thickness, 0, RELIEF_NONE],
-		[2 * material_thickness, 0, RELIEF_NONE],
-		[2 * material_thickness, material_thickness, RELIEF_LEAD_OUT],
+		[material_thickness + slop, 0, RELIEF_NONE],
+		[2 * material_thickness - slop, 0, RELIEF_NONE],
+		[2 * material_thickness - slop, material_thickness, RELIEF_LEAD_OUT],
 
 		// Slope
 		[4 * material_thickness, material_thickness, RELIEF_NONE],
-		[4 * material_thickness + (w / 10), shelf_h - material_thickness, RELIEF_NONE],
+		[4 * material_thickness + (w / 10), shelf_h - material_thickness - slop, RELIEF_NONE],
 
 		// Shelf
-		[x, shelf_h - material_thickness, RELIEF_LEAD_IN],
-		[x, shelf_h, RELIEF_LEAD_OUT],
-		[w - x, shelf_h, RELIEF_LEAD_IN],
-		[w - x, shelf_h - material_thickness, RELIEF_LEAD_OUT],
+		[x - slop, shelf_h - material_thickness - slop, RELIEF_LEAD_IN],
+		[x - slop, shelf_h, RELIEF_LEAD_OUT],
+		[w - x + slop, shelf_h, RELIEF_LEAD_IN],
+		[w - x + slop, shelf_h - material_thickness - slop, RELIEF_LEAD_OUT],
 
 		// Slope
-		[w - (4 * material_thickness + (w / 10)), shelf_h - material_thickness, RELIEF_NONE],
+		[w - (4 * material_thickness + (w / 10)), shelf_h - material_thickness - slop, RELIEF_NONE],
 		[w - 4 * material_thickness, material_thickness, RELIEF_NONE],
-		[w - 2 * material_thickness, material_thickness, RELIEF_LEAD_IN],
-		[w - 2 * material_thickness, 0, RELIEF_NONE],
+		[w - 2 * material_thickness + slop, material_thickness, RELIEF_LEAD_IN],
+		[w - 2 * material_thickness + slop, 0, RELIEF_NONE],
 
 		// Side
-		[w - material_thickness, 0, RELIEF_NONE],
-		[w - material_thickness, shelf_h / 2, RELIEF_LEAD_IN],
+		[w - material_thickness - slop, 0, RELIEF_NONE],
+		[w - material_thickness - slop, shelf_h / 2, RELIEF_LEAD_IN],
 		[w, shelf_h / 2, RELIEF_NONE],
 		[w, h - (h - shelf_h) / 2, RELIEF_NONE],
-		[w - material_thickness, h - (h - shelf_h) / 2, RELIEF_LEAD_OUT],
+		[w - material_thickness - slop, h - (h - shelf_h) / 2, RELIEF_LEAD_OUT],
 
 		// Top
-		[w - material_thickness, h - material_thickness, RELIEF_NONE],
+		[w - material_thickness - slop, h - material_thickness, RELIEF_NONE],
 		[2 * w / 3, h - material_thickness, RELIEF_LEAD_IN],
 		[2 * w / 3, h, RELIEF_NONE],
 		[w / 3, h, RELIEF_NONE],
 		[w / 3, h - material_thickness, RELIEF_LEAD_OUT],
 
 		// Side
-		[material_thickness, h - material_thickness, RELIEF_NONE],
-		[material_thickness, h - (h - shelf_h) / 2, RELIEF_LEAD_IN],
+		[material_thickness + slop, h - material_thickness, RELIEF_NONE],
+		[material_thickness + slop, h - (h - shelf_h) / 2, RELIEF_LEAD_IN],
 		[0, h - (h - shelf_h) / 2, RELIEF_NONE],
 		[0, shelf_h / 2, RELIEF_NONE],
-		[material_thickness, shelf_h / 2, RELIEF_LEAD_OUT],
-		[material_thickness, 0, RELIEF_NONE],
+		[material_thickness + slop, shelf_h / 2, RELIEF_LEAD_OUT],
+		[material_thickness + slop, 0, RELIEF_NONE],
 	];
 
 	tongue_top = h - (h - shelf_h) / 2;
@@ -327,14 +327,14 @@ module front(w = width, d = depth, h = height, material_thickness = material_thi
 
 	outline = [
 		[0, 0, RELIEF_NONE],
-		[2 * material_thickness, 0, RELIEF_NONE],
-		[2 * material_thickness, material_thickness, RELIEF_LEAD_OUT],
+		[2 * material_thickness - slop, 0, RELIEF_NONE],
+		[2 * material_thickness - slop, material_thickness, RELIEF_LEAD_OUT],
 		[4 * material_thickness, material_thickness, RELIEF_NONE],
-		[4 * material_thickness + (w / 10), shelf_h - material_thickness, RELIEF_NONE],
-		[x, shelf_h - material_thickness, RELIEF_LEAD_IN],
-		[x, shelf_h, RELIEF_NONE],
-		[material_thickness, shelf_h, RELIEF_NONE],
-		[material_thickness, shelf_h / 2, RELIEF_LEAD_IN],
+		[4 * material_thickness + (w / 10), shelf_h - material_thickness - slop, RELIEF_NONE],
+		[x - slop, shelf_h - material_thickness, RELIEF_LEAD_IN],
+		[x - slop, shelf_h, RELIEF_NONE],
+		[material_thickness + slop, shelf_h, RELIEF_NONE],
+		[material_thickness + slop, shelf_h / 2 - slop, RELIEF_LEAD_IN],
 		[0, shelf_h / 2, RELIEF_NONE],
 	];
 
@@ -363,9 +363,9 @@ module foot(material_thickness = material_thickness) {
 		[material_thickness, 4 * material_thickness, RELIEF_NONE],
 		[0, 4 * material_thickness, RELIEF_NONE],
 		[0, 2 * material_thickness, RELIEF_NONE],
-		[material_thickness, 2 * material_thickness, RELIEF_LEAD_OUT],
-		[material_thickness, material_thickness, RELIEF_NONE],
-		[2 * material_thickness, material_thickness, RELIEF_LEAD_IN],
+		[material_thickness + slop, 2 * material_thickness, RELIEF_LEAD_OUT],
+		[material_thickness + slop, material_thickness + slop, RELIEF_NONE],
+		[2 * material_thickness, material_thickness + slop, RELIEF_LEAD_IN],
 	];
 
 	holes = [
