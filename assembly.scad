@@ -1,14 +1,15 @@
-$fn = 16;
+$fn = 128;
 
-width = 400;
-depth = 480;
-height = 560;
-tongue_w = width * 2 / 3;
-material_thickness = 18;
-shelf_h = height * 2 / 3;
-radius = 3.5;
-drill_radius = 2;
-slop = 2.0;
+scl = 1;
+width = 400 * scl;
+depth = 500 * scl;
+height = 600 * scl;
+tongue_w = (width * 2 / 3);
+material_thickness = 18 * scl;
+shelf_h = (height * 2 / 3);
+radius = 3.5 * scl;
+drill_radius = 3.5 * scl;
+slop = 0.03;
 
 include <parts.scad>
 

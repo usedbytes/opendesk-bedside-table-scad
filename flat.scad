@@ -1,18 +1,21 @@
-$fn = 16;
+$fn = 128;
 
-scl = 3 / 18;
+scl = 1;
 width = 400 * scl;
 depth = 500 * scl;
 height = 600 * scl;
 tongue_w = (width * 2 / 3);
 material_thickness = 18 * scl;
 shelf_h = (height * 2 / 3);
-radius = 3.5 * scl;
-drill_radius = 2 * scl;
-slop = 0.03;
+radius = 3.25 * scl;
+drill_radius = 3.5 / 2;
+slop = 0.18;
 
 include <parts.scad>
 
+foot();
+
+/*
 translate([0, 0, 0]) shelf();
 
 translate([100, 0, 0]) left_side();
@@ -34,4 +37,5 @@ translate([280, 120, 0]) foot();
 translate([260, 140, 0]) foot();
 
 translate([280, 140, 0]) foot();
+*/
 
