@@ -32,6 +32,8 @@ module relief(corner = [0, 0], radius = 5) {
 	polygon(relief_points(corner = corner, radius = radius));
 }
 
+function no_relief(points) = [ for (i = points) [i[0], i[1], RELIEF_NONE] ];
+
 function relief_lead_in_points(corner = [[0, -30], [0, 0], [30, 0]], radius = 5) =
 	let(
 		rot_mat = corner[0][0] == corner[1][0] ? [[1, 0],[0, 1]] : [[0, 1], [1, 0]],
@@ -265,50 +267,67 @@ module right_side(w = width, d = depth, h = height, material_thickness = materia
 module back(w = width, d = depth, h = height, material_thickness = material_thickness) {
 	x = (w - tongue_w) / 2;
 
-	outline = [
-		// Foot
-		[material_thickness + slop, 0, RELIEF_NONE],
-		[2 * material_thickness - slop, 0, RELIEF_NONE],
-		[2 * material_thickness - slop, material_thickness, RELIEF_LEAD_OUT],
+	arc_r = tongue_w / 3;
+	arc_yoffs = tongue_w * 0.13;
 
-		// Slope
-		[4 * material_thickness, material_thickness, RELIEF_NONE],
-		[4 * material_thickness + (w / 10), shelf_h - material_thickness - slop, RELIEF_NONE],
+	echo(arc_r);
+	echo(arc_yoffs);
 
-		// Shelf
-		[x - slop, shelf_h - material_thickness - slop, RELIEF_LEAD_IN],
-		[x - slop, shelf_h, RELIEF_LEAD_OUT],
-		[w - x + slop, shelf_h, RELIEF_LEAD_IN],
-		[w - x + slop, shelf_h - material_thickness - slop, RELIEF_LEAD_OUT],
+	theta = acos(arc_yoffs / arc_r);
+	start_t = 90 - theta;
+	angle = theta * 2;
 
-		// Slope
-		[w - (4 * material_thickness + (w / 10)), shelf_h - material_thickness - slop, RELIEF_NONE],
-		[w - 4 * material_thickness, material_thickness, RELIEF_NONE],
-		[w - 2 * material_thickness + slop, material_thickness, RELIEF_LEAD_IN],
-		[w - 2 * material_thickness + slop, 0, RELIEF_NONE],
+	outline = concat(
+		[
+			// Foot
+			[material_thickness + slop, 0, RELIEF_NONE],
+			[2 * material_thickness - slop, 0, RELIEF_NONE],
+			[2 * material_thickness - slop, material_thickness, RELIEF_LEAD_OUT],
 
-		// Side
-		[w - material_thickness - slop, 0, RELIEF_NONE],
-		[w - material_thickness - slop, shelf_h / 2, RELIEF_LEAD_IN],
-		[w, shelf_h / 2, RELIEF_NONE],
-		[w, h - (h - shelf_h) / 2, RELIEF_NONE],
-		[w - material_thickness - slop, h - (h - shelf_h) / 2, RELIEF_LEAD_OUT],
+			// Slope
+			[4 * material_thickness, material_thickness, RELIEF_NONE],
+			[4 * material_thickness + (w / 10), shelf_h - material_thickness - slop, RELIEF_NONE],
 
-		// Top
-		[w - material_thickness - slop, h - material_thickness, RELIEF_NONE],
-		[2 * w / 3, h - material_thickness, RELIEF_LEAD_IN],
-		[2 * w / 3, h, RELIEF_NONE],
-		[w / 3, h, RELIEF_NONE],
-		[w / 3, h - material_thickness, RELIEF_LEAD_OUT],
+			// Shelf
+			[x - slop, shelf_h - material_thickness - slop, RELIEF_LEAD_IN],
+			[x - slop, shelf_h, RELIEF_LEAD_OUT],
+			[(w / 2) - arc_r * sin(theta), shelf_h, RELIEF_NONE],
+		],
+		reverse(no_relief(arc_points(centre = [w / 2, shelf_h - arc_yoffs], radius = arc_r, start = start_t, angle = angle))),
+		[
+			[(w / 2) + arc_r * sin(theta), shelf_h, RELIEF_NONE],
+			[w - x + slop, shelf_h, RELIEF_LEAD_IN],
+			[w - x + slop, shelf_h - material_thickness - slop, RELIEF_LEAD_OUT],
 
-		// Side
-		[material_thickness + slop, h - material_thickness, RELIEF_NONE],
-		[material_thickness + slop, h - (h - shelf_h) / 2, RELIEF_LEAD_IN],
-		[0, h - (h - shelf_h) / 2, RELIEF_NONE],
-		[0, shelf_h / 2, RELIEF_NONE],
-		[material_thickness + slop, shelf_h / 2, RELIEF_LEAD_OUT],
-		[material_thickness + slop, 0, RELIEF_NONE],
-	];
+			// Slope
+			[w - (4 * material_thickness + (w / 10)), shelf_h - material_thickness - slop, RELIEF_NONE],
+			[w - 4 * material_thickness, material_thickness, RELIEF_NONE],
+			[w - 2 * material_thickness + slop, material_thickness, RELIEF_LEAD_IN],
+			[w - 2 * material_thickness + slop, 0, RELIEF_NONE],
+
+			// Side
+			[w - material_thickness - slop, 0, RELIEF_NONE],
+			[w - material_thickness - slop, shelf_h / 2, RELIEF_LEAD_IN],
+			[w, shelf_h / 2, RELIEF_NONE],
+			[w, h - (h - shelf_h) / 2, RELIEF_NONE],
+			[w - material_thickness - slop, h - (h - shelf_h) / 2, RELIEF_LEAD_OUT],
+
+			// Top
+			[w - material_thickness - slop, h - material_thickness, RELIEF_NONE],
+			[2 * w / 3, h - material_thickness, RELIEF_LEAD_IN],
+			[2 * w / 3, h, RELIEF_NONE],
+			[w / 3, h, RELIEF_NONE],
+			[w / 3, h - material_thickness, RELIEF_LEAD_OUT],
+
+			// Side
+			[material_thickness + slop, h - material_thickness, RELIEF_NONE],
+			[material_thickness + slop, h - (h - shelf_h) / 2, RELIEF_LEAD_IN],
+			[0, h - (h - shelf_h) / 2, RELIEF_NONE],
+			[0, shelf_h / 2, RELIEF_NONE],
+			[material_thickness + slop, shelf_h / 2, RELIEF_LEAD_OUT],
+			[material_thickness + slop, 0, RELIEF_NONE],
+		]
+	);
 
 	tongue_top = h - (h - shelf_h) / 2;
 	holes = [
